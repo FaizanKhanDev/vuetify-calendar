@@ -342,11 +342,11 @@ export default {
             console.log("saveEvent", JSON.stringify(this.selectedEvent))
             const index = this.events.findIndex((event) => event.id === this.selectedEvent.id)
             console.log("saveEvent index", JSON.stringify(index))
-            if (index !== -1) {
-                this.events[index] = this.selectedEvent
-                // Reseting selected Event
-                this.selectedEvent = {};
-            }
+            // if (index !== -1) {
+            //     this.events[index] = this.selectedEvent
+            //     // Reseting selected Event
+            //     this.selectedEvent = {};
+            // }
             this.editDialog = false
         }
     },
