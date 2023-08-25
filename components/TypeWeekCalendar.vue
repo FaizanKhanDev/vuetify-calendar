@@ -266,9 +266,6 @@ export default {
                 };
 
 
-                // await this.$fire.firestore.collection("calEvent").add(newEvent);
-
-
                 this.events.push(newEvent);
 
 
