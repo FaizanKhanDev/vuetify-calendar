@@ -39,10 +39,7 @@
 </template>
 
 <script>
-import VInput from "vuetify/lib/components/VInput/VInput.js";
-
 export default {
-    extends: VInput,
     data() {
         return {
             dialog: false,
