@@ -108,13 +108,13 @@
                             <v-row>
                                 <!-- Start Date Date Picker -->
                                 <v-col cols="12" sm="6" md="6">
-                                    <!-- <DateTimePicker label="Start Date & Time" v-model="start" :required="true"
-                                        :preset="true" :clearable="true"></DateTimePicker> -->
+                                    <DateTimePicker label="Start Date & Time" v-model="start" :required="true"
+                                        :preset="true" :clearable="true"></DateTimePicker>
                                 </v-col>
                                 <!-- End Date Date Picker -->
                                 <v-col cols="12" sm="6" md="6">
-                                    <!-- <DateTimePicker label="End Date & Time" v-model="end" :required="true" :preset="true"
-                                        :clearable="true"></DateTimePicker> -->
+                                    <DateTimePicker label="End Date & Time" v-model="end" :required="true" :preset="true"
+                                        :clearable="true"></DateTimePicker>
                                 </v-col>
                             </v-row>
                             <!-- Color Picker -->
@@ -142,7 +142,11 @@
     </v-row>
 </template>
 <script>
+import DateTimePicker from './DateTimePicker.vue'
 export default {
+    components: {
+        DateTimePicker
+    },
     data: () => ({
         focus: '',
         type: 'month',
