@@ -43,6 +43,9 @@
                                 <v-list-item-title>4 days</v-list-item-title>
                             </v-list-item>
                         </v-list>
+                        <v-btn fab small class="ml-1" @click.stop="dialog = true">
+                            <v-icon> mdi-plus </v-icon>
+                        </v-btn>
                     </v-menu>
                 </v-toolbar>
             </v-sheet>
@@ -77,6 +80,65 @@
                 </v-menu>
             </v-sheet>
         </v-col>
+        <!--  Add Event Dialog -->
+        <v-dialog v-model="dialog" persistent max-width="500">
+            <v-card>
+                <v-card-title>
+                    <span class="text-h5">Add Event</span>
+                </v-card-title>
+
+                <v-form @submit.prevent="addEvent">
+                    <v-card-text>
+                        <v-container>
+                            <!-- Name -->
+                            <v-row>
+                                <v-col cols="12" sm="12" md="12">
+                                    <v-text-field v-model="name" type="text" label="Event Name (required)"
+                                        required></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <!-- Detail -->
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-textarea v-model="detail" solo required outlined auto-grow rows="3"
+                                        label="Add event details (required)"></v-textarea>
+                                </v-col>
+                            </v-row>
+                            <!-- Start and End Date Time Picker -->
+                            <v-row>
+                                <!-- Start Date Date Picker -->
+                                <v-col cols="12" sm="6" md="6">
+                                    <!-- <DateTimePicker label="Start Date & Time" v-model="start" :required="true"
+                                        :preset="true" :clearable="true"></DateTimePicker> -->
+                                </v-col>
+                                <!-- End Date Date Picker -->
+                                <v-col cols="12" sm="6" md="6">
+                                    <!-- <DateTimePicker label="End Date & Time" v-model="end" :required="true" :preset="true"
+                                        :clearable="true"></DateTimePicker> -->
+                                </v-col>
+                            </v-row>
+                            <!-- Color Picker -->
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-col class="d-flex justify-center">
+                                        <div>
+                                            <v-label>Event Color (required)</v-label>
+                                        </div>
+                                        <v-color-picker v-model="color" hide-inputs canvas-height="120"
+                                            width="300"></v-color-picker>
+                                    </v-col>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn text @click="dialog = false"> Close </v-btn>
+                        <v-btn type="submit"> Create Event </v-btn>
+                    </v-card-actions>
+                </v-form>
+            </v-card>
+        </v-dialog>
     </v-row>
 </template>
 <script>
@@ -92,10 +154,24 @@ export default {
         },
         selectedEvent: {},
         selectedElement: null,
+        dialog: false,
         selectedOpen: false,
         events: [],
         colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+        name: null,
+        detail: null,
+        start: null,
+        end: null,
+        color: "#1976D2",
+        selectedEvent: {
+            id: null,
+            name: "",
+            detail: "",
+            start: "",
+            end: "",
+            color: "",
+        },
     }),
     mounted() {
         this.$refs.calendar.checkChange()
@@ -162,6 +238,28 @@ export default {
         rnd(a, b) {
             return Math.floor((b - a + 1) * Math.random()) + a
         },
+
+        async addEvent() {
+            if (this.name && this.detail && this.start && this.end && this.color) {
+                let newEvent = {
+                    name: this.name,
+                    detail: this.detail,
+                    start: this.start,
+                    end: this.end,
+                    color: this.color,
+                };
+                await db.collection("calEvent").add(newEvent);
+                this.events.push(newEvent);
+                this.name = this.detail = this.start = this.end = this.color = "";
+                this.dialog = false;
+            } else {
+                alert(
+                    "Event information missing\nName\nDetail\nStart and End Date with Color all are required"
+                );
+                // this.dialog = false;
+            }
+        },
     },
+
 }
 </script>
