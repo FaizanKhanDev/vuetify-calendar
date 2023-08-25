@@ -21,7 +21,7 @@
                     </v-tabs>
                     <v-tabs-items v-model="tabs">
                         <v-tab-item value="pick-date">
-                            <v-date-picker v-model="datePicker" :rules="rules.eventDateRule"></v-date-picker>
+                            <v-date-picker v-model="datePicker"></v-date-picker>
                         </v-tab-item>
                         <v-tab-item value="pick-time">
                             <v-time-picker format="ampm" v-model="timePicker" scrollable></v-time-picker>

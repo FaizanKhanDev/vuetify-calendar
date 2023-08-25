@@ -81,12 +81,10 @@
             </v-sheet>
         </v-col>
         <!--  Add Event Dialog -->
+        <!-- Inside the Add Event Dialog -->
         <v-dialog v-model="dialog" persistent max-width="500">
             <v-card>
-                <v-card-title>
-                    <span class="text-h5">Add Event</span>
-                </v-card-title>
-
+                <!-- ... card content ... -->
                 <v-form @submit.prevent="addEvent">
                     <v-card-text>
                         <v-container>
@@ -133,12 +131,13 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn text @click="dialog = false"> Close </v-btn>
-                        <v-btn type="submit"> Create Event </v-btn>
+                        <v-btn text @click="dialog = false">Close</v-btn>
+                        <v-btn type="submit">Create Event</v-btn>
                     </v-card-actions>
                 </v-form>
             </v-card>
         </v-dialog>
+
     </v-row>
 </template>
 <script>
@@ -258,25 +257,65 @@ export default {
 
         async addEvent() {
             if (this.name && this.detail && this.start && this.end && this.color) {
-                let newEvent = {
+                const newEvent = {
                     name: this.name,
                     detail: this.detail,
                     start: this.start,
                     end: this.end,
                     color: this.color,
                 };
-                await db.collection("calEvent").add(newEvent);
+
+
+                // await this.$fire.firestore.collection("calEvent").add(newEvent);
+
+
                 this.events.push(newEvent);
+
+
                 this.name = this.detail = this.start = this.end = this.color = "";
                 this.dialog = false;
-            } else {
-                alert(
-                    "Event information missing\nName\nDetail\nStart and End Date with Color all are required"
-                );
-                // this.dialog = false;
+            }
+            else {
+                alert("Event information missing. Please fill in all required fields.");
             }
         },
     },
 
 }
 </script>
+<style scoped lang="scss">
+.v-event-draggable {
+    padding-left: 6px;
+}
+
+.v-event-timed {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.v-event-drag-bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+    height: 4px;
+    cursor: ns-resize;
+
+    &::after {
+        display: none;
+        position: absolute;
+        left: 50%;
+        height: 4px;
+        border-top: 1px solid white;
+        border-bottom: 1px solid white;
+        width: 16px;
+        margin-left: -8px;
+        opacity: 0.8;
+        content: '';
+    }
+
+    &:hover::after {
+        display: block;
+    }
+}
+</style>
