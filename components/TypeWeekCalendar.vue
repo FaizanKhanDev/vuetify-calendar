@@ -56,20 +56,20 @@
                 <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
                     <v-card color="grey lighten-4" min-width="350px" flat>
                         <v-toolbar :color="selectedEvent.color" dark>
-                            <v-btn icon>
+                            <v-btn icon @click="editEvent(selectedEvent)">
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                             <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                             <v-spacer></v-spacer>
-                            <v-btn icon>
+                            <!-- <v-btn icon>
                                 <v-icon>mdi-heart</v-icon>
-                            </v-btn>
+                            </v-btn> -->
                             <v-btn icon>
                                 <v-icon>mdi-dots-vertical</v-icon>
                             </v-btn>
                         </v-toolbar>
                         <v-card-text>
-                            <span v-html="selectedEvent.details"></span>
+                            <span v-html="selectedEvent.detail"></span>
                         </v-card-text>
                         <v-card-actions>
                             <v-btn text color="secondary" @click="selectedOpen = false">
@@ -138,6 +138,63 @@
             </v-card>
         </v-dialog>
 
+        <!--  edite the Selected Event -->
+        <v-dialog v-model="editDialog" persistent max-width="500">
+            <v-card>
+                <!-- ... card content ... -->
+                <v-form @submit.prevent="saveEvent">
+                    <v-card-text>
+                        <v-container>
+                            <!-- Name -->
+                            <v-row>
+                                <v-col cols="12" sm="12" md="12">
+                                    <v-text-field v-model="selectedEvent.name" type="text" label="Event Name (required)"
+                                        required></v-text-field>
+                                </v-col>
+                            </v-row>
+                            <!-- Detail -->
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-textarea v-model="selectedEvent.detail" solo required outlined auto-grow rows="3"
+                                        label="Add event details (required)"></v-textarea>
+                                </v-col>
+                            </v-row>
+                            <!-- Start and End Date Time Picker -->
+                            <v-row>
+                                <!-- Start Date Date Picker -->
+                                <v-col cols="12" sm="6" md="6">
+                                    <DateTimePicker label="Start Date & Time" v-model="selectedEvent.start" :required="true"
+                                        :preset="true" :clearable="true"></DateTimePicker>
+                                </v-col>
+                                <!-- End Date Date Picker -->
+                                <v-col cols="12" sm="6" md="6">
+                                    <DateTimePicker label="End Date & Time" v-model="selectedEvent.end" :required="true"
+                                        :preset="true" :clearable="true"></DateTimePicker>
+                                </v-col>
+                            </v-row>
+                            <!-- Color Picker -->
+                            <v-row>
+                                <v-col cols="12">
+                                    <v-col class="d-flex justify-center">
+                                        <div>
+                                            <v-label>Event Color (required)</v-label>
+                                        </div>
+                                        <v-color-picker v-model="selectedEvent.color" hide-inputs canvas-height="120"
+                                            width="300"></v-color-picker>
+                                    </v-col>
+                                </v-col>
+                            </v-row>
+                        </v-container>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn text @click="editDialog = false">Close</v-btn>
+                        <v-btn type="submit">Save Event</v-btn>
+                    </v-card-actions>
+                </v-form>
+            </v-card>
+        </v-dialog>
+
     </v-row>
 </template>
 <script>
@@ -159,6 +216,7 @@ export default {
         selectedElement: null,
         dialog: false,
         selectedOpen: false,
+        editDialog: false,
         events: [],
         colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
@@ -276,6 +334,21 @@ export default {
                 alert("Event information missing. Please fill in all required fields.");
             }
         },
+        editEvent(events) {
+            console.log(JSON.stringify(events))
+            this.editDialog = true
+        },
+        saveEvent() {
+            console.log("saveEvent", JSON.stringify(this.selectedEvent))
+            const index = this.events.findIndex((event) => event.id === this.selectedEvent.id)
+            console.log("saveEvent index", JSON.stringify(index))
+            if (index !== -1) {
+                this.events[index] = this.selectedEvent
+                // Reseting selected Event
+                this.selectedEvent = {};
+            }
+            this.editDialog = false
+        }
     },
 
 }
