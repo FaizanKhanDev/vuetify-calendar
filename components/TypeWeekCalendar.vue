@@ -312,7 +312,6 @@ export default {
         rnd(a, b) {
             return Math.floor((b - a + 1) * Math.random()) + a
         },
-
         async addEvent() {
             if (this.name && this.detail && this.start && this.end && this.color) {
                 const newEvent = {
@@ -322,8 +321,6 @@ export default {
                     end: this.end,
                     color: this.color,
                 };
-
-
                 this.events.push(newEvent);
 
 
@@ -345,8 +342,8 @@ export default {
             // if (index !== -1) {
             //     this.events[index] = this.selectedEvent
             //     // Reseting selected Event
-            //     this.selectedEvent = {};
             // }
+            this.selectedEvent = {};
             this.editDialog = false
         }
     },
