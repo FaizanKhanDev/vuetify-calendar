@@ -217,7 +217,10 @@ export default {
         dialog: false,
         selectedOpen: false,
         editDialog: false,
-        events: [],
+        events: [
+
+
+        ],
         colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
         name: null,
