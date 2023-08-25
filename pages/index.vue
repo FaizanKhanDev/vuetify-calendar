@@ -7,7 +7,11 @@
 
 <script>
 import TypeWeekCalendar from '@/components/TypeWeekCalendar.vue';
+
 export default {
-  name: 'IndexPage'
+  name: 'IndexPage',
+  components: {
+    TypeWeekCalendar
+  },
 }
 </script>

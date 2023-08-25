@@ -51,8 +51,8 @@
             </v-sheet>
             <v-sheet height="600">
                 <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :event-color="getEventColor"
-                    :type="type" @click:event="showEvent" @click:more="viewDay" @click:date="viewDay"
-                    @change="updateRange"></v-calendar>
+                    :type="type" @click:event="showEvent" @click:more="viewDay" @click:date="viewDay" @change="updateRange"
+                    @mousedown:event="startDrag"></v-calendar>
                 <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
                     <v-card color="grey lighten-4" min-width="350px" flat>
                         <v-toolbar :color="selectedEvent.color" dark>
@@ -168,6 +168,11 @@ export default {
         start: null,
         end: null,
         color: "#1976D2",
+        dragEvent: null,
+        dragStart: null,
+        createEvent: null,
+        createStart: null,
+        extendOriginal: null,
         selectedEvent: {
             id: null,
             name: "",
@@ -181,6 +186,14 @@ export default {
         this.$refs.calendar.checkChange()
     },
     methods: {
+        startDrag({ event, timed }) {
+            if (event && timed) {
+                this.dragEvent = event
+                this.dragTime = null
+                this.extendOriginal = null
+            }
+            console.log("fired")
+        },
         viewDay({ date }) {
             this.focus = date
             this.type = 'day'
