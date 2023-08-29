@@ -6,12 +6,12 @@
                     :event-color="getEventColor" :event-ripple="false" @change="getEvents" @mousedown:event="startDrag"
                     @mousedown:time="startTime" @mousemove:time="mouseMove" @mouseup:time="endDrag"
                     @mouseleave.native="cancelDrag">
-                    <!-- <template v-slot:event="{ event, timed, eventSummary }">
+                    <template v-slot:event="{ event, timed, eventSummary }">
                         <div class="v-event-draggable">
                             <component :is="{ render: eventSummary }"></component>
                         </div>
                         <div v-if="timed" class="v-event-drag-bottom" @mousedown.stop="extendBottom(event)"></div>
-                    </template> -->
+                    </template>
                 </v-calendar>
             </v-sheet>
         </v-col>
@@ -120,6 +120,12 @@ export default {
         toTime(tms) {
             return new Date(tms.year, tms.month - 1, tms.day, tms.hour, tms.minute).getTime()
         },
+
+
+
+
+
+
         getEventColor(event) {
             const rgb = parseInt(event.color.substring(1), 16)
             const r = (rgb >> 16) & 0xFF

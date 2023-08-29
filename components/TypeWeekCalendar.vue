@@ -412,6 +412,8 @@ export default {
             }
 
             this.events = events
+            console.log("event", JSON.stringify(this.events))
+
         },
         rnd(a, b) {
             return Math.floor((b - a + 1) * Math.random()) + a
