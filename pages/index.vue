@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <!-- <TypeWeekCalendar /> -->
-    <TypeWeekDayCalendar />
+    <TypeWeekCalendar />
+    <!-- <TypeWeekDayCalendar /> -->
   </v-container>
 </template>
 
@@ -12,7 +12,7 @@ export default {
   name: 'IndexPage',
   components: {
     TypeWeekCalendar,
-    TypeWeekDayCalendar
+    // TypeWeekDayCalendar
   },
 }
 </script>

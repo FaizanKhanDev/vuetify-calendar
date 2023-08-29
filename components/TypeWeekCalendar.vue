@@ -52,7 +52,17 @@
             <v-sheet height="600">
                 <v-calendar ref="calendar" v-model="focus" color="primary" :events="events" :event-color="getEventColor"
                     :type="type" @click:event="showEvent" @click:more="viewDay" @click:date="viewDay" @change="updateRange"
-                    @mousedown:event="startDrag"></v-calendar>
+                    @mousedown:event="startDrag" @mousedown:time="startTime" @mousemove:time="mouseMove"
+                    @mouseup:time="endDrag" @mouseleave.native="cancelDrag" :event-ripple="false">
+                    <template v-slot:event="{ event, timed, eventSummary }">
+                        <div class="v-event-draggable">
+                            <component :is="{ render: eventSummary }"></component>
+                        </div>
+                        <div v-if="timed" class="v-event-drag-bottom" @mousedown.stop="extendBottom(event)"></div>
+                    </template>
+                </v-calendar>
+
+
                 <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
                     <v-card color="grey lighten-4" min-width="350px" flat>
                         <v-toolbar :color="selectedEvent.color" dark>
@@ -254,6 +264,97 @@ export default {
             }
             console.log("fired")
         },
+
+        startTime(tms) {
+            console.log(tms)
+            const mouse = this.toTime(tms)
+
+            if (this.dragEvent && this.dragTime === null) {
+                const start = this.dragEvent.start
+
+                this.dragTime = mouse - start
+            } else {
+                this.createStart = this.roundTime(mouse)
+                this.createEvent = {
+                    name: `Event #${this.events.length}`,
+                    color: this.rndElement(this.colors),
+                    start: this.createStart,
+                    end: this.createStart,
+                    timed: true,
+                }
+
+                this.events.push(this.createEvent)
+            }
+        },
+
+        mouseMove(tms) {
+            const mouse = this.toTime(tms)
+
+            if (this.dragEvent && this.dragTime !== null) {
+                const start = this.dragEvent.start
+                const end = this.dragEvent.end
+                const duration = end - start
+                const newStartTime = mouse - this.dragTime
+                const newStart = this.roundTime(newStartTime)
+                const newEnd = newStart + duration
+
+                this.dragEvent.start = newStart
+                this.dragEvent.end = newEnd
+            } else if (this.createEvent && this.createStart !== null) {
+                const mouseRounded = this.roundTime(mouse, false)
+                const min = Math.min(mouseRounded, this.createStart)
+                const max = Math.max(mouseRounded, this.createStart)
+
+                this.createEvent.start = min
+                this.createEvent.end = max
+            }
+        },
+
+        endDrag() {
+            this.dragTime = null
+            this.dragEvent = null
+            this.createEvent = null
+            this.createStart = null
+            this.extendOriginal = null
+        },
+
+        cancelDrag() {
+            if (this.createEvent) {
+                if (this.extendOriginal) {
+                    this.createEvent.end = this.extendOriginal
+                } else {
+                    const i = this.events.indexOf(this.createEvent)
+                    if (i !== -1) {
+                        this.events.splice(i, 1)
+                    }
+                }
+            }
+
+            this.createEvent = null
+            this.createStart = null
+            this.dragTime = null
+            this.dragEvent = null
+        },
+
+
+        roundTime(time, down = true) {
+            const roundTo = 15 // minutes
+            const roundDownTime = roundTo * 60 * 1000
+
+            return down
+                ? time - time % roundDownTime
+                : time + (roundDownTime - (time % roundDownTime))
+        },
+        toTime(tms) {
+            return new Date(tms.year, tms.month - 1, tms.day, tms.hour, tms.minute).getTime()
+        },
+
+        extendBottom(event) {
+            this.createEvent = event
+            this.createStart = event.start
+            this.extendOriginal = event.end
+        },
+
         viewDay({ date }) {
             this.focus = date
             this.type = 'day'
