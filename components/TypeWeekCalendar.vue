@@ -273,6 +273,8 @@ export default {
                 const start = this.dragEvent.start
 
                 this.dragTime = mouse - start
+                console.log("startTime", JSON.stringify(this.dragEvent))
+
             } else {
                 this.createStart = this.roundTime(mouse)
                 this.createEvent = {
