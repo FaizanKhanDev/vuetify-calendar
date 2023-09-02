@@ -215,7 +215,7 @@ export default {
     },
     data: () => ({
         focus: '',
-        type: 'month',
+        type: 'week',
         typeToLabel: {
             month: 'Month',
             week: 'Week',
@@ -262,7 +262,6 @@ export default {
                 this.dragTime = null
                 this.extendOriginal = null
             }
-            console.log("fired")
         },
 
         startTime(tms) {
@@ -453,7 +452,13 @@ export default {
             // }
             this.selectedEvent = {};
             this.editDialog = false
-        }
+        },
+        rnd(a, b) {
+            return Math.floor((b - a + 1) * Math.random()) + a
+        },
+        rndElement(arr) {
+            return arr[this.rnd(0, arr.length - 1)]
+        },
     },
 
 }
