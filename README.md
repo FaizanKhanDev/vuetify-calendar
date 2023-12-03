@@ -1,6 +1,6 @@
 # vuetify-v-calendar
 
-## Build Setup
+## Build & Setup
 
 ```bash
 # install dependencies
